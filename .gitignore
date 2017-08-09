@@ -1,0 +1,8 @@
+ipch/
+cscope*
+*.suo
+*.sdf
+*.opensdf
+Win32
+ReadMe.txt
+.vs
