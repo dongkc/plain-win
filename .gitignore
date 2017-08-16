@@ -8,3 +8,4 @@ ReadMe.txt
 .vs
 sdk/bin/32/plain-win.pdb
 sdk/bin/32/plain-win.ilk
+./bin/32/plain-win.exe
