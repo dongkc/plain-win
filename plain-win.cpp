@@ -1,3 +1,5 @@
+#define POCO_NO_UNWINDOWS
+#include "WebSocketServer.h"
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
@@ -48,12 +50,13 @@ bool window::init_class()
 window::window()
 {
   init_class();
-  _hwnd = CreateWindow(WINDOW_CLASS_NAME, L"demo", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, ghInstance, this);
+  _hwnd = CreateWindow(WINDOW_CLASS_NAME, L"scanner", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, ghInstance, this);
   if (!_hwnd)
     return;
 
   init();
 
+  // hide the main windows at first
   ShowWindow(_hwnd, SW_HIDE);
   UpdateWindow(_hwnd);
 
@@ -64,9 +67,8 @@ window::window()
   icon_data.hIcon            = icon;
   icon_data.uFlags           = NIF_MESSAGE | NIF_ICON | NIF_TIP;
   icon_data.uCallbackMessage = WM_ICON_NOTIFY;
-  wcscpy_s(icon_data.szTip, L"icon tray test");
+  wcscpy_s(icon_data.szTip, L"scanner service");
   Shell_NotifyIcon(NIM_ADD, &icon_data);
-
 }
 
 window* window::ptr(HWND hwnd)
@@ -83,7 +85,7 @@ bool window::init()
 }
 void window::remove_icon()
 {
-	Shell_NotifyIcon(NIM_DELETE, &icon_data);
+  Shell_NotifyIcon(NIM_DELETE, &icon_data);
 }
 
 //
@@ -94,6 +96,7 @@ void window::remove_icon()
 
 LRESULT CALLBACK window::wnd_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+#if 0
   if( message == WM_KEYDOWN && wParam == VK_F5 )
   {
     window* self = ptr(hWnd);
@@ -144,6 +147,7 @@ LRESULT CALLBACK window::wnd_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
     return 0;
   }
+#endif
   if (message == WM_ICON_NOTIFY && LOWORD(lParam) == WM_RBUTTONUP) {
     window* self = ptr(hWnd);
 
@@ -195,7 +199,7 @@ LRESULT CALLBACK window::wnd_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
   {
     case WM_DESTROY:
       PostQuitMessage(0);
-	  self->remove_icon();
+      self->remove_icon();
       break;
   }
   return DefWindowProc(hWnd, message, wParam, lParam);
@@ -208,9 +212,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     LPTSTR    lpCmdLine,
     int       nCmdShow)
 {
+  WebSocketServer app;
+  app.run();
+
   UNREFERENCED_PARAMETER(hPrevInstance);
   UNREFERENCED_PARAMETER(lpCmdLine);
-//  SciterSetOption(NULL, SCITER_SET_DEBUG_MODE, TRUE);
+  //  SciterSetOption(NULL, SCITER_SET_DEBUG_MODE, TRUE);
   ghInstance = hInstance;
 
   // TODO: Place code here.

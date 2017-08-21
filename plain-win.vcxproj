@@ -241,7 +241,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)sdk\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Librelease;$(SolutionDir)sdk\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
